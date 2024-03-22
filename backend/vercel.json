@@ -6,6 +6,10 @@
       "use": "@vercel/node"
     }
   ],
+  "env": {
+    "MONGO_URL": "mongodb+srv://ayminbashir2001:H59GsnpEVCggm4Zk@test.je7r5cq.mongodb.net/",
+    "PORT": "3000"
+  },
   "routes": [
     {
       "src": "/(.*)",
