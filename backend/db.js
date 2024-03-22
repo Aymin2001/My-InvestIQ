@@ -1,6 +1,5 @@
-require("dotenv").config();
 const mongoose = require('mongoose');
-const mongoURI = process.env['MONGO_URL']; // Use square bracket notation
+const mongoURI = "mongodb+srv://ayminbashir2001:H59GsnpEVCggm4Zk@test.je7r5cq.mongodb.net/"; // Use square bracket notation
 
 const connectToMongo = () => {
     mongoose.connect(mongoURI)

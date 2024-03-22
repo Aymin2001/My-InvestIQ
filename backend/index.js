@@ -1,8 +1,7 @@
 const express = require('express');
 const connectToMongo = require('./db');
 const cors = require('cors');
-require("dotenv").config();
-const port = process.env['PORT']; // Use square bracket notation
+const port = 3000; // Use square bracket notation
 
 connectToMongo();
 
