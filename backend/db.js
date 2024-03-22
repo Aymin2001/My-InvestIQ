@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require('mongoose');
-const mongoURI = process.env['MONGO-URL']; // Use square bracket notation
+const mongoURI = process.env['MONGO_URL']; // Use square bracket notation
 
 const connectToMongo = () => {
     mongoose.connect(mongoURI)
