@@ -38,6 +38,20 @@ router.post('/Contact', async (req, res) => {
   });
 
 
+// Route to get all contact details
+
+router.get('/getContacts', async (req, res) => {
+  try {
+    // Fetch all contact details from the database
+    const contacts = await Contact.find(); // Use Contact.find() instead of contacts.find()
+    
+    // Send the fetched contacts as a response
+    res.status(200).json(contacts);
+  } catch (error) {
+    console.error('Error fetching contact details:', error);
+    res.status(500).json({ error: 'An error occurred while fetching contact details' });
+  }
+});
 
 
 
