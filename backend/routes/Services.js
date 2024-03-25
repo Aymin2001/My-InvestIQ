@@ -54,6 +54,23 @@ router.get('/getServices', async (req, res) => {
   }
 });
 
+// Route to delete a specific contact by ID
+router.delete('/Service/:id', async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    
+    // Find the contact by ID and delete it
+    const deletedService = await Service.findByIdAndDelete(serviceId);
 
+    if (!deletedService) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    res.status(200).json({ message: 'service deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting service:', error);
+    res.status(500).json({ error: 'An error occurred while deleting service' });
+  }
+});
 
 module.exports = router;

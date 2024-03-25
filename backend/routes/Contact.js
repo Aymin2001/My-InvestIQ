@@ -54,7 +54,7 @@ router.get('/getContacts', async (req, res) => {
 });
 
 // Route to delete a specific contact by ID
-router.delete('/contact/:id', async (req, res) => {
+router.delete('/Contact/:id', async (req, res) => {
   try {
     const contactId = req.params.id;
     
