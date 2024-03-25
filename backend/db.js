@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoURI = "mongodb+srv://ayminbashir2001:H59GsnpEVCggm4Zk@test.je7r5cq.mongodb.net/"; // Use square bracket notation
+const mongoURI = "mongodb+srv://ayminbashir2001:H59GsnpEVCggm4Zk@test.je7r5cq.mongodb.net/"; 
 
 const connectToMongo = () => {
     mongoose.connect(mongoURI)

@@ -1,91 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Administrator</title>
-    <link rel="stylesheet" href="./css/style.css">
-   
-</head>
-<body>
-  <!-- for contact -->
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- for contact -->
     <table id="contactTable">
-        <caption>Contact Us Detail</caption>
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Message</th>
-          </tr>
-        </thead>
-        <tbody>
-        
-        </tbody>
-      </table>
-      <!-- for service -->
-      <table id="serviceTable">
-        <caption>Services Detail</caption>
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Mobile No</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Message</th>
-          </tr>
-        </thead>
-        <tbody>
-        
-        </tbody>
-      </table>
-      <!-- for fetching contact detail -->
-      <script>
-        // Fetch contact details from the API
-        fetch('https://my-invest-iq-backend.vercel.app/api/contact/getContacts')
-            .then(response => response.json())
-            .then(data => {
-                // Get the table body element
-                const tableBody = document.querySelector('#contactTable tbody');
+      <caption>
+        Contact Us Detail
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Subject</th>
+          <th scope="col">Message</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <!-- for service -->
+    <table id="serviceTable">
+      <caption>
+        Services Detail
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Mobile No</th>
+          <th scope="col">Subject</th>
+          <th scope="col">Message</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <!-- for fetching and deleting contact detail -->
+    <script>
+      fetch("https://my-invest-iq-backend.vercel.app/api/contact/getContacts")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.querySelector("#contactTable tbody");
 
-                // Loop through the fetched data and create table rows
-                data.forEach(contact => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
+          data.forEach((contact) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
                         <td scope="row" data-label="NAME">${contact.name}</td>
                         <td scope="row" data-label="EMAIL">${contact.email}</td>
                         <td scope="row" data-label="SUBJECT">${contact.subject}</td>
                         <td scope="row" data-label="MESSAGE">${contact.message}</td>
-                        <td><button class="btn-delete">Delete</button></td>
+                        <td>
+                            <button class="btn-delete" data-contact-id="${contact._id}">Delete</button>
+                        </td>
                     `;
-                    tableBody.appendChild(row);
-                });
-            })
-            .catch(error => console.error('Error fetching contact details:', error));
-    </script>
-    <!-- for fetching service detail -->
-    <script>
-      // Fetch contact details from the API
-      fetch('https://my-invest-iq-backend.vercel.app/api/service/getServices')
-          .then(response => response.json())
-          .then(data => {
-              // Get the table body element
-              const tableBody = document.querySelector('#serviceTable tbody');
+            tableBody.appendChild(row);
+          });
 
-              // Loop through the fetched data and create table rows
-              data.forEach(contact => {
-                  const row = document.createElement('tr');
-                  row.innerHTML = `
-                      <td scope="row" data-label="NAME">${contact.name}</td>
-                      <td scope="row" data-label="EMAIL">${contact.email}</td>
-                      <td scope="row" data-label="PHONE-NO">${contact.mobileNo}</td>
-                      <td scope="row" data-label="SUBJECT">${contact.subject}</td>
-                      <td scope="row" data-label="MESSAGE">${contact.message}</td>
-                  `;
-                  tableBody.appendChild(row);
-              });
+          const deleteButtons = document.querySelectorAll(".btn-delete");
+          deleteButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              const contactId = button.getAttribute("data-contact-id");
+              deleteContact(contactId);
+            });
+          });
+        })
+        .catch((error) =>
+          console.error("Error fetching contact details:", error)
+        );
+
+      function deleteContact(contactId) {
+        fetch(
+          ` https://my-invest-iq-backend.vercel.app/api/contact/Contact/${contactId}`,
+          {
+            method: "DELETE",
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              const rowToDelete = document.querySelector(
+                `[data-contact-id="${contactId}"]`
+              ).parentNode.parentNode;
+              rowToDelete.parentNode.removeChild(rowToDelete);
+            } else {
+              throw new Error("Failed to delete contact");
+            }
           })
-          .catch(error => console.error('Error fetching service details:', error));
-  </script>
-</body>
+          .catch((error) => console.error("Error deleting contact:", error));
+      }
+    </script>
+    <!-- for fetching and deleting service detail -->
+
+    <script>
+      fetch("https://my-invest-iq-backend.vercel.app/api/service/getServices")
+        .then((response) => response.json())
+        .then((data) => {
+          const tableBody = document.querySelector("#serviceTable tbody");
+
+          data.forEach((service) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                      <td scope="row" data-label="NAME">${service.name}</td>
+                      <td scope="row" data-label="EMAIL">${service.email}</td>
+                      <td scope="row" data-label="PHONE-NO">${service.mobileNo}</td>
+                      <td scope="row" data-label="SUBJECT">${service.subject}</td>
+                      <td scope="row" data-label="MESSAGE">${service.message}</td>
+                      <td>
+                          <button class="btn-delete" data-service-id="${service._id}">Delete</button>
+                      </td>
+                  `;
+            tableBody.appendChild(row);
+          });
+
+          const deleteButtons = document.querySelectorAll(".btn-delete");
+          deleteButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              const serviceId = button.getAttribute("data-service-id");
+              if (serviceId) {
+                deleteService(serviceId);
+              } else {
+                console.error("Service ID is missing or invalid");
+              }
+            });
+          });
+        })
+        .catch((error) =>
+          console.error("Error fetching service details:", error)
+        );
+
+      function deleteService(serviceId) {
+        fetch(
+          `https://my-invest-iq-backend.vercel.app/api/service/Service/${serviceId}`,
+          {
+            method: "DELETE",
+          }
+        )
+          .then((response) => {
+            if (response.ok) {
+              const rowToDelete = document.querySelector(
+                `[data-service-id="${serviceId}"]`
+              ).parentNode.parentNode;
+              rowToDelete.parentNode.removeChild(rowToDelete);
+            } else {
+              throw new Error("Failed to delete service");
+            }
+          })
+          .catch((error) => console.error("Error deleting service:", error));
+      }
+    </script>
+  </body>
 </html>

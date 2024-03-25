@@ -1038,7 +1038,6 @@
             <a class="btn btn-link" href="#financial-planning"
               >Business Loans</a
             >
-           
           </div>
 
           <div class="col-lg-3 col-md-6">
@@ -1046,9 +1045,7 @@
             <a class="btn btn-link" href="about.html">About Us</a>
             <a class="btn btn-link" href="contact.html">Contact Us</a>
             <a class="btn btn-link" href="service.html">Our Services</a>
-            <a class="btn btn-link" href="#" id="admin-link"
-            >Administrator</a
-          >
+            <a class="btn btn-link" href="#" id="admin-link">Administrator</a>
           </div>
           <div class="col-lg-3 col-md-6">
             <h4 class="text-white mb-4">Newsletter</h4>
@@ -1072,29 +1069,39 @@
     </div>
     <!-- Footer End -->
 
-
     <!-- Modal -->
 
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3 id="glitterText" class="gradient-text display-5 mb-3 text-center">
-      LOG<span class="text-purple">I</span
-      ><span class="text-cyan">N</span>
-    </h3>
-    <form id="login-form">
-      <div class="input-group">
-        <input type="email" name="email" placeholder="Email" id="admin-email" required>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="glitterText" class="gradient-text display-5 mb-3 text-center">
+          LOG<span class="text-purple">I</span><span class="text-cyan">N</span>
+        </h3>
+        <form id="login-form">
+          <div class="input-group">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              id="admin-email"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              id="admin-pswrd"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <button type="submit" class="submit-button">Submit</button>
+          </div>
+        </form>
       </div>
-      <div class="input-group">
-        <input type="password" name="password" placeholder="Password" id="admin-pswrd" required>
-      </div>
-      <div class="input-group">
-        <button type="submit" class="submit-button">Submit</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
 
     <!-- Copyright Start -->
     <div class="container-fluid copyright py-4">
@@ -1132,14 +1139,12 @@
         .addEventListener("click", async function (event) {
           event.preventDefault();
 
-          // Get form data
           const name = document.getElementById("name").value.trim();
           const email = document.getElementById("email").value.trim();
           const mobile = document.getElementById("mobile").value.trim();
           const subject = document.getElementById("subject").value.trim();
           const message = document.getElementById("message").value.trim();
 
-          // Check if any field is empty
           if (!name || !email || !mobile || !subject || !message) {
             let errorMessage = "Please fill out all required fields:";
             if (!name) errorMessage += "\n- Your Name";
@@ -1150,19 +1155,18 @@
             alert(errorMessage);
             return;
           }
-          // Validate email format
+
           const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
           if (!emailPattern.test(email)) {
             alert("Please enter a valid email address");
             return;
           }
 
-          // Validate mobile number length
           if (mobile.length !== 11) {
             alert("Mobile number must be 11 digits");
             return;
           }
-          // Make POST request to backend API
+
           try {
             const formData = {
               name: name,
@@ -1187,7 +1191,6 @@
               throw new Error("Failed to submit message");
             }
 
-            // Reset form after successful submission
             document.getElementById("name").value = "";
             document.getElementById("email").value = "";
             document.getElementById("mobile").value = "";
@@ -1201,7 +1204,7 @@
           }
         });
     </script>
-<!-- for close icon -->
+    <!-- for close icon -->
     <script>
       function handleReadMoreClick(link, contentId) {
         var additionalContent = document.getElementById(contentId);
@@ -1225,78 +1228,59 @@
     <!-- for navigating to administrator page -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Get the form element
         var loginForm = document.getElementById("login-form");
-    
-        // Add event listener to the form submit event
+
         loginForm.addEventListener("submit", function (event) {
-          // Prevent the default form submission
           event.preventDefault();
-    
-          // Check if the user has exceeded the maximum number of attempts
+
           var attempts = parseInt(localStorage.getItem("loginAttempts")) || 0;
           var lastAttempt = parseInt(localStorage.getItem("lastAttempt")) || 0;
           var now = Date.now();
-          var oneMinute = 60 * 1000; // One minute in milliseconds
-          // var oneHour = 3600 * 1000; 
-    
+          var oneMinute = 60 * 1000;
+
           if (attempts >= 3 && now - lastAttempt < oneMinute) {
-            // Display an alert indicating that the user should try again after one hour
-            alert("You have exceeded the maximum number of attempts. Please try again after one minute.");
+            alert(
+              "You have exceeded the maximum number of attempts. Please try again after one minute."
+            );
             return;
           }
-    
-          // Get the values entered by the user
+
           var email = document.getElementById("admin-email").value.trim();
           var password = document.getElementById("admin-pswrd").value.trim();
-    
-          // Check if the entered credentials match the predefined ones
+
           if (email === "admin@gmail.com" && password === "admin890") {
-            // Redirect to the admin page
             window.location.href = "administrator.html";
           } else {
-            // Increment the number of attempts
             localStorage.setItem("loginAttempts", attempts + 1);
-            // Update the timestamp of the last attempt
             localStorage.setItem("lastAttempt", now);
-    
-            // Display an alert for invalid credentials
+
             alert("Invalid email or password. Please try again.");
           }
         });
       });
     </script>
-    
-    
 
-
+    <!-- for closing the modal -->
     <script>
-      // Get the modal
-var modal = document.getElementById("modal");
+      var modal = document.getElementById("modal");
 
-// Get the link that opens the modal
-var adminLink = document.getElementById("admin-link");
+      var adminLink = document.getElementById("admin-link");
 
-// Get the <span> element that closes the modal
-var closeBtn = document.getElementsByClassName("close")[0];
+      var closeBtn = document.getElementsByClassName("close")[0];
 
-// When the user clicks the link, open the modal 
-adminLink.onclick = function() {
-  modal.style.display = "block";
-}
+      adminLink.onclick = function () {
+        modal.style.display = "block";
+      };
 
-// When the user clicks on <span> (x), close the modal
-closeBtn.onclick = function() {
-  modal.style.display = "none";
-}
+      closeBtn.onclick = function () {
+        modal.style.display = "none";
+      };
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
     </script>
 
     <!-- JavaScript Libraries -->
