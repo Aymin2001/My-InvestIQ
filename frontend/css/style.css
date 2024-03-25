@@ -911,6 +911,19 @@ h6,
   }
   
   
+    .btn-delete {
+        background-color: #ff4d4d; /* Red background color */
+        color: white; /* White text color */
+        border: none; /* Remove button border */
+        padding: 8px 16px; /* Add padding */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        border-radius: 4px; /* Add border radius */
+    }
+
+    .btn-delete:hover {
+        background-color: #ff6666; /* Darker red color on hover */
+    }
+
   
   
   

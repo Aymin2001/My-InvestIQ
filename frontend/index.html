@@ -1038,9 +1038,7 @@
             <a class="btn btn-link" href="#financial-planning"
               >Business Loans</a
             >
-            <a class="btn btn-link" href="#" id="admin-link"
-            >Administrator</a
-          >
+           
           </div>
 
           <div class="col-lg-3 col-md-6">
@@ -1048,6 +1046,9 @@
             <a class="btn btn-link" href="about.html">About Us</a>
             <a class="btn btn-link" href="contact.html">Contact Us</a>
             <a class="btn btn-link" href="service.html">Our Services</a>
+            <a class="btn btn-link" href="#" id="admin-link"
+            >Administrator</a
+          >
           </div>
           <div class="col-lg-3 col-md-6">
             <h4 class="text-white mb-4">Newsletter</h4>
@@ -1083,10 +1084,10 @@
     </h3>
     <form id="login-form">
       <div class="input-group">
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" placeholder="Email" id="admin-email" required>
       </div>
       <div class="input-group">
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="password" placeholder="Password" id="admin-pswrd" required>
       </div>
       <div class="input-group">
         <button type="submit" class="submit-button">Submit</button>
@@ -1172,7 +1173,7 @@
             };
 
             const response = await fetch(
-              "https://my-invest-iq-backend.vercel.app//api/service/Service",
+              "https://my-invest-iq-backend.vercel.app/api/service/Service",
               {
                 method: "POST",
                 headers: {
@@ -1222,22 +1223,51 @@
       });
     </script>
     <!-- for navigating to administrator page -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-  // Get the form element
-  var loginForm = document.getElementById("login-form");
-
-  // Add event listener to the form submit event
-  loginForm.addEventListener("submit", function (event) {
-    // Prevent the default form submission
-    event.preventDefault();
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the form element
+        var loginForm = document.getElementById("login-form");
     
-    // Redirect to the desired page
-    window.location.href = "administrator.html";
-  });
-});
-
-  </script>
+        // Add event listener to the form submit event
+        loginForm.addEventListener("submit", function (event) {
+          // Prevent the default form submission
+          event.preventDefault();
+    
+          // Check if the user has exceeded the maximum number of attempts
+          var attempts = parseInt(localStorage.getItem("loginAttempts")) || 0;
+          var lastAttempt = parseInt(localStorage.getItem("lastAttempt")) || 0;
+          var now = Date.now();
+          var oneMinute = 60 * 1000; // One minute in milliseconds
+          // var oneHour = 3600 * 1000; 
+    
+          if (attempts >= 3 && now - lastAttempt < oneMinute) {
+            // Display an alert indicating that the user should try again after one hour
+            alert("You have exceeded the maximum number of attempts. Please try again after one hour.");
+            return;
+          }
+    
+          // Get the values entered by the user
+          var email = document.getElementById("admin-email").value.trim();
+          var password = document.getElementById("admin-pswrd").value.trim();
+    
+          // Check if the entered credentials match the predefined ones
+          if (email === "admin@gmail.com" && password === "admin890") {
+            // Redirect to the admin page
+            window.location.href = "administrator.html";
+          } else {
+            // Increment the number of attempts
+            localStorage.setItem("loginAttempts", attempts + 1);
+            // Update the timestamp of the last attempt
+            localStorage.setItem("lastAttempt", now);
+    
+            // Display an alert for invalid credentials
+            alert("Invalid email or password. Please try again.");
+          }
+        });
+      });
+    </script>
+    
+    
 
 
     <script>

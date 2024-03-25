@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator</title>
     <link rel="stylesheet" href="./css/style.css">
+   
 </head>
 <body>
   <!-- for contact -->
@@ -55,6 +56,7 @@
                         <td scope="row" data-label="EMAIL">${contact.email}</td>
                         <td scope="row" data-label="SUBJECT">${contact.subject}</td>
                         <td scope="row" data-label="MESSAGE">${contact.message}</td>
+                        <td><button class="btn-delete">Delete</button></td>
                     `;
                     tableBody.appendChild(row);
                 });
