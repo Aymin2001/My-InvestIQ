@@ -860,7 +860,16 @@ h6,
     letter-spacing: .1em;
     text-transform: uppercase;
   }
-  
+  #serviceTable td {
+    white-space: normal;
+    word-wrap: break-word;
+    
+}
+#contactTable td {
+    white-space: normal;
+    word-wrap: break-word;
+    
+}
   @media screen and (max-width: 600px) {
     table {
       border: 0;
