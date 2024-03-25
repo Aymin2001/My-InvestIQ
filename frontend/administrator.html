@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <table>
+  <!-- for contact -->
+    <table id="contactTable">
         <caption>Contact Us Detail</caption>
         <thead>
           <tr>
@@ -18,31 +19,71 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td data-label="Account">Visa - 3412</td>
-            <td data-label="Due Date">04/01/2016</td>
-            <td data-label="Amount">$1,190</td>
-            <td data-label="Period">03/01/2016 - 03/31/2016</td>
-          </tr>
-          <tr>
-            <td scope="row" data-label="Account">Visa - 6076</td>
-            <td data-label="Due Date">03/01/2016</td>
-            <td data-label="Amount">$2,443</td>
-            <td data-label="Period">02/01/2016 - 02/29/2016</td>
-          </tr>
-          <tr>
-            <td scope="row" data-label="Account">Corporate AMEX</td>
-            <td data-label="Due Date">03/01/2016</td>
-            <td data-label="Amount">$1,181</td>
-            <td data-label="Period">02/01/2016 - 02/29/2016</td>
-          </tr>
-          <tr>
-            <td scope="row" data-label="Acount">Visa - 3412</td>
-            <td data-label="Due Date">02/01/2016</td>
-            <td data-label="Amount">$842</td>
-            <td data-label="Period">01/01/2016 - 01/31/2016</td>
-          </tr>
+        
         </tbody>
       </table>
+      <!-- for service -->
+      <table id="serviceTable">
+        <caption>Services Detail</caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile No</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+      </table>
+      <!-- for fetching contact detail -->
+      <script>
+        // Fetch contact details from the API
+        fetch('https://my-invest-iq-backend.vercel.app/api/contact/getContacts')
+            .then(response => response.json())
+            .then(data => {
+                // Get the table body element
+                const tableBody = document.querySelector('#contactTable tbody');
+
+                // Loop through the fetched data and create table rows
+                data.forEach(contact => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td scope="row" data-label="NAME">${contact.name}</td>
+                        <td scope="row" data-label="EMAIL">${contact.email}</td>
+                        <td scope="row" data-label="SUBJECT">${contact.subject}</td>
+                        <td scope="row" data-label="MESSAGE">${contact.message}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching contact details:', error));
+    </script>
+    <!-- for fetching service detail -->
+    <script>
+      // Fetch contact details from the API
+      fetch('https://my-invest-iq-backend.vercel.app/api/service/getServices')
+          .then(response => response.json())
+          .then(data => {
+              // Get the table body element
+              const tableBody = document.querySelector('#serviceTable tbody');
+
+              // Loop through the fetched data and create table rows
+              data.forEach(contact => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                      <td scope="row" data-label="NAME">${contact.name}</td>
+                      <td scope="row" data-label="EMAIL">${contact.email}</td>
+                      <td scope="row" data-label="PHONE-NO">${contact.mobileNo}</td>
+                      <td scope="row" data-label="SUBJECT">${contact.subject}</td>
+                      <td scope="row" data-label="MESSAGE">${contact.message}</td>
+                  `;
+                  tableBody.appendChild(row);
+              });
+          })
+          .catch(error => console.error('Error fetching service details:', error));
+  </script>
 </body>
 </html>
