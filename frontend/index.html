@@ -731,9 +731,9 @@
                 <p
                   class="d-inline-block border rounded text-primary fw-semi-bold py-1 px-3"
                 >
-                  Get In Touch
+                  Get In Touch For Required Services
                 </p>
-                <h1 class="display-5 mb-5">Request A Call-Back</h1>
+                <h1 class="display-5 mb-5">Request A Service</h1>
               </div>
               <div class="row g-3">
                 <div class="col-sm-6">
@@ -1038,6 +1038,9 @@
             <a class="btn btn-link" href="#financial-planning"
               >Business Loans</a
             >
+            <a class="btn btn-link" href="#" id="admin-link"
+            >Administrator</a
+          >
           </div>
 
           <div class="col-lg-3 col-md-6">
@@ -1067,6 +1070,33 @@
       </div>
     </div>
     <!-- Footer End -->
+
+
+    <!-- Modal -->
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3 id="glitterText" class="gradient-text display-5 mb-3 text-center">
+      LOG<span class="text-purple">I</span
+      ><span class="text-cyan">N</span>
+    </h3>
+    <!-- <h3 class="display-5 mb-5 text-center">
+      Login
+    </h3> -->
+    <form id="login-form">
+      <div class="input-group">
+        <input type="email" name="email" placeholder="Email" required>
+      </div>
+      <div class="input-group">
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="input-group">
+        <button type="submit" class="submit-button">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
 
     <!-- Copyright Start -->
     <div class="container-fluid copyright py-4">
@@ -1173,7 +1203,7 @@
           }
         });
     </script>
-
+<!-- for close icon -->
     <script>
       function handleReadMoreClick(link, contentId) {
         var additionalContent = document.getElementById(contentId);
@@ -1193,6 +1223,53 @@
           handleReadMoreClick(this, contentId);
         });
       });
+    </script>
+    <!-- for navigating to administrator page -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  // Get the form element
+  var loginForm = document.getElementById("login-form");
+
+  // Add event listener to the form submit event
+  loginForm.addEventListener("submit", function (event) {
+    // Prevent the default form submission
+    event.preventDefault();
+    
+    // Redirect to the desired page
+    window.location.href = "administrator.html";
+  });
+});
+
+  </script>
+
+
+    <script>
+      // Get the modal
+var modal = document.getElementById("modal");
+
+// Get the link that opens the modal
+var adminLink = document.getElementById("admin-link");
+
+// Get the <span> element that closes the modal
+var closeBtn = document.getElementsByClassName("close")[0];
+
+// When the user clicks the link, open the modal 
+adminLink.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+closeBtn.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
     </script>
 
     <!-- JavaScript Libraries -->

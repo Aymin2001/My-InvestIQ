@@ -1,16 +1,16 @@
 const express=require('express');
 const router=express.Router();
-const Contact=require('../models/contact');
+const Service=require('../models/service');
 
 
 //storing contactus detail
-router.post('/Contact', async (req, res) => {
+router.post('/Service', async (req, res) => {
     try {
       // Extract data from the request body
-      const { name, email, subject, message } = req.body;
+      const { name, email,mobileNo, subject, message } = req.body;
   
       // Validate input
-      if (!name || !email ||  !subject || !message) {
+      if (!name || !email || !mobileNo ||  !subject || !message) {
         return res.status(400).json({ error: 'All fields are required' });
       }
     
@@ -19,17 +19,18 @@ router.post('/Contact', async (req, res) => {
       // }
   
       // Create a new Contact document
-      const newContact = new Contact({
+      const newService = new Service({
         name,
         email,
+        mobileNo,
         subject,
         message
       });
   
       // Save the Contact document to MongoDB
-      await newContact.save();
+      await newService.save();
   
-      res.status(201).json({ message: 'Contact details saved successfully' });
+      res.status(201).json({ message: 'Service details saved successfully' });
     } catch (error) {
       console.error('Error saving contact details:', error);
       res.status(500).json({ error: 'An error occurred while saving contact details' });
