@@ -25,6 +25,6 @@ const serviceSchema = new Schema({
   }
 });
 
-const service = mongoose.model('Service', contactSchema);
+const service = mongoose.model('Service', serviceSchema);
 
 module.exports = service;
