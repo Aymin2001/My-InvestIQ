@@ -17,6 +17,8 @@ app.get("/check",(req,res) =>{
 
 /
 app.use('/api/contact', require('./routes/Contact')); 
+app.use('/api/service', require('./routes/Services')); 
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
