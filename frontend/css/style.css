@@ -962,7 +962,9 @@ table th {
 }
 
 .rows:hover {
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
+  background-color: #007bff;
+  color: #fff;
 }
 
 .rows i {
@@ -978,3 +980,11 @@ table th {
   background-color: #007bff;
   color: #fff;
 }
+
+
+
+
+
+
+
+

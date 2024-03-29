@@ -46,6 +46,7 @@
         <div class="bar"></div>
         <div class="bar"></div>
       </div>
+      
     
      
       <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -66,16 +67,16 @@
         </div>
         <div class="offcanvas-body">
           <div class="column">
-            <div class="rows active" onclick="location.href='administrator.html';">
+            <div class="rows " onclick="location.href='administrator.html';">
               <i class="fas fa-home"></i>
               <p>Dashboard</p>
              
             </div>
-            <div class="rows" onclick="location.href='page2.html';">
+            <div class="rows" onclick="location.href='Aboutus.html';">
               <i class="fas fa-user"></i>
-              <p>User</p>
+              <p>About US</p>
             </div>
-            <div class="rows" onclick="location.href='page3.html';">
+            <div class="rows" onclick="location.href='setting.html';">
               <i class="fas fa-cog"></i>
               <p>Settings</p>
             </div>
@@ -90,6 +91,7 @@
 
         
       </div>
+    </div>
     </div>
     
 
@@ -239,6 +241,20 @@
       }
     </script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const currentLocation = window.location.href;
+      
+          const menuItems = document.querySelectorAll(".offcanvas-body .rows");
+      
+          menuItems.forEach(function(item) {
+            const link = item.getAttribute("onclick").match(/'([^']+)'/)[1];
+            if (currentLocation.includes(link)) {
+              item.classList.add("active");
+            }
+          });
+        });
+      </script>
+      
   </body>
 </html>
