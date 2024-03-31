@@ -16,7 +16,7 @@ router.post('/createuser', [
     body('name', 'Enter a valid name').isLength({ min: 3 }),
     body('email', 'Enter a valid email').isEmail(),
     body('password').isLength({ min: 5 }),
-    body('dateOfBirth').isISO8601(), // Assuming dateOfBirth is in ISO 8601 format
+    body('dateOfBirth'), // Assuming dateOfBirth is in ISO 8601 format
     body('city').isString(),
     body('phone').isMobilePhone(), // Assuming phone number validation according to locale
 ], async (req, res) => {

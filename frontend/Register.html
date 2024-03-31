@@ -100,16 +100,21 @@
           <div class="settings visible">
           
             <h3>Register Admin</h3>
-            <form action="" class="modifyInfo">
+            <form id="registrationForm" class="modifyInfo">
               <table>
                 <tr>
                   <td class="title">Name :</td>
                   <td><input type="text" name="name" /></td>
                 </tr>
-                <!-- <tr>
-                  <td class="title">Last Name :</td>
-                  <td><input type="text" name="lastName" /></td>
-                </tr> -->
+               
+                <tr>
+                  <td class="title">Email :</td>
+                  <td><input type="email" name="email" /></td>
+                </tr>
+                <tr>
+                  <td class="title">Password :</td>
+                  <td><input type="password" name="password" /></td>
+              </tr>
                 <tr>
                   <td class="title">Date Birth :</td>
                   <td><input type="date" name="dateBirth" /></td>
@@ -122,14 +127,11 @@
                   <td class="title">Phone Number :</td>
                   <td><input type="text" name="phone" /></td>
                 </tr>
-                <tr>
-                  <td class="title">Email :</td>
-                  <td><input type="email" name="email" /></td>
-                </tr>
+             
                 <tr>
                   <td></td>
                   <td>
-                    <input type="submit" value="Change" class="primary" />
+                    <input type="submit" value="submit" class="primary" />
                     <input type="reset" value="Cancel" class="secondary" />
                   </td>
                 </tr>
@@ -181,6 +183,103 @@
           });
         });
       </script>
-      
+     
+
+
+     <script>
+      const form = document.getElementById("registrationForm");
+      form.addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent form submission
+          
+          // Clear previous error messages
+          const errorElements = document.querySelectorAll(".error");
+          errorElements.forEach(element => element.textContent = "");
+  
+          // Validate form inputs
+          const name = form.elements["name"].value;
+          const dateBirth = form.elements["dateBirth"].value;
+          const city = form.elements["city"].value;
+          const phone = form.elements["phone"].value;
+          const email = form.elements["email"].value;
+          const password = form.elements["password"].value;
+  
+          if (!name) {
+              document.getElementById("nameError").textContent = "Please enter your name";
+              return;
+          }
+  
+          if (!dateBirth) {
+              document.getElementById("dateBirthError").textContent = "Please enter your date of birth";
+              return;
+          }
+  
+          if (!city) {
+              document.getElementById("cityError").textContent = "Please enter your city";
+              return;
+          }
+  
+          if (!phone) {
+              document.getElementById("phoneError").textContent = "Please enter your phone number";
+              return;
+          }
+  
+          if (!email) {
+              document.getElementById("emailError").textContent = "Please enter your email";
+              return;
+          } else if (!isValidEmail(email)) {
+              document.getElementById("emailError").textContent = "Please enter a valid email address";
+              return;
+          }
+  
+          if (!password) {
+              document.getElementById("passwordError").textContent = "Please enter a password";
+              return;
+          } else if (password.length < 5) {
+              document.getElementById("passwordError").textContent = "Password must be at least 5 characters long";
+              return;
+          }
+  
+          // If all validations pass, send data to backend API
+          const formData = {
+              name: name,
+              dateOfBirth: dateBirth,
+              city: city,
+              phone: phone,
+              email: email,
+              password: password
+          };
+  
+          fetch("https://my-invest-iq-backend.vercel.app/api/auth/createuser", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert("Registration successful!");
+                  window.location.href = "dashboard.html"; // Redirect to dashboard page
+              } else {
+                  const errorMessage = data.errors.map(error => error.msg).join("\n");
+                  alert(errorMessage);
+              }
+          })
+          .catch(error => {
+              console.error("Error:", error);
+              alert("An error occurred. Please try again later.");
+          });
+      });
+  
+      // Function to validate email format
+      function isValidEmail(email) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+      }
+  </script>
+  
+
+
 </body>
 </html>
