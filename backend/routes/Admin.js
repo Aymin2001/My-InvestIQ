@@ -144,7 +144,7 @@ router.post('/getuser', getuser, async (req, res) => {
   
   // Route to change user password
 router.post('/change-password', [
-    auth, // Authenticate user
+    getuser, // Authenticate user
     body('currentPassword', 'Current password is required').notEmpty(),
     body('newPassword', 'New password is required').notEmpty(),
     body('confirmPassword', 'Confirm password is required').notEmpty(),
@@ -189,5 +189,5 @@ router.post('/change-password', [
       res.status(500).send('Internal Server Error');
     }
   });
-  
+
 module.exports = router;
