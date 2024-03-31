@@ -72,10 +72,12 @@
               <p>Dashboard</p>
              
             </div>
-            <div class="rows" onclick="location.href='Aboutus.html';">
-              <i class="fas fa-user"></i>
-              <p>About US</p>
+            <div class="rows " onclick="location.href='Feedback.html';">
+              <i class="fas fa-comments"></i>
+              <p>Feedback</p>
+             
             </div>
+           
             <div class="rows" onclick="location.href='setting.html';">
               <i class="fas fa-cog"></i>
               <p>Settings</p>
@@ -83,6 +85,10 @@
             <div class="rows" onclick="location.href='profile.html';">
               <i class="fas fa-user"></i>
               <p>Profile</p>
+            </div>
+            <div class="rows" onclick="location.href='Register.html';">
+              <i class="fas fa-user"></i>
+              <p>Register Admin</p>
             </div>
             
           </div>
@@ -97,21 +103,7 @@
 
 
 
-    <!-- for contact -->
-    <table id="contactTable">
-      <caption>
-        Contact Us Detail
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Subject</th>
-          <th scope="col">Message</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+   
     <!-- for service -->
     <table id="serviceTable">
       <caption>
@@ -128,59 +120,7 @@
       </thead>
       <tbody></tbody>
     </table>
-    <!-- for fetching and deleting contact detail -->
-    <script>
-      fetch("https://my-invest-iq-backend.vercel.app/api/contact/getContacts")
-        .then((response) => response.json())
-        .then((data) => {
-          const tableBody = document.querySelector("#contactTable tbody");
-
-          data.forEach((contact) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                        <td scope="row" data-label="NAME">${contact.name}</td>
-                        <td scope="row" data-label="EMAIL">${contact.email}</td>
-                        <td scope="row" data-label="SUBJECT">${contact.subject}</td>
-                        <td scope="row" data-label="MESSAGE">${contact.message}</td>
-                        <td>
-                            <button class="btn-delete" data-contact-id="${contact._id}">Delete</button>
-                        </td>
-                    `;
-            tableBody.appendChild(row);
-          });
-
-          const deleteButtons = document.querySelectorAll(".btn-delete");
-          deleteButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-              const contactId = button.getAttribute("data-contact-id");
-              deleteContact(contactId);
-            });
-          });
-        })
-        .catch((error) =>
-          console.error("Error fetching contact details:", error)
-        );
-
-      function deleteContact(contactId) {
-        fetch(
-          ` https://my-invest-iq-backend.vercel.app/api/contact/Contact/${contactId}`,
-          {
-            method: "DELETE",
-          }
-        )
-          .then((response) => {
-            if (response.ok) {
-              const rowToDelete = document.querySelector(
-                `[data-contact-id="${contactId}"]`
-              ).parentNode.parentNode;
-              rowToDelete.parentNode.removeChild(rowToDelete);
-            } else {
-              throw new Error("Failed to delete contact");
-            }
-          })
-          .catch((error) => console.error("Error deleting contact:", error));
-      }
-    </script>
+ 
     <!-- for fetching and deleting service detail -->
 
     <script>

@@ -1045,7 +1045,7 @@
             <a class="btn btn-link" href="about.html">About Us</a>
             <a class="btn btn-link" href="contact.html">Contact Us</a>
             <a class="btn btn-link" href="service.html">Our Services</a>
-            <a class="btn btn-link" href="#" id="admin-link">Administrator</a>
+            <a class="btn btn-link" href="adminLogin.html" >Administrator</a>
           </div>
           <div class="col-lg-3 col-md-6">
             <h4 class="text-white mb-4">Newsletter</h4>
@@ -1225,63 +1225,9 @@
         });
       });
     </script>
-    <!-- for navigating to administrator page -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var loginForm = document.getElementById("login-form");
+   
 
-        loginForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          var attempts = parseInt(localStorage.getItem("loginAttempts")) || 0;
-          var lastAttempt = parseInt(localStorage.getItem("lastAttempt")) || 0;
-          var now = Date.now();
-          var oneMinute = 60 * 1000;
-
-          if (attempts >= 3 && now - lastAttempt < oneMinute) {
-            alert(
-              "You have exceeded the maximum number of attempts. Please try again after one minute."
-            );
-            return;
-          }
-
-          var email = document.getElementById("admin-email").value.trim();
-          var password = document.getElementById("admin-pswrd").value.trim();
-
-          if (email === "admin@gmail.com" && password === "admin890") {
-            window.location.href = "administrator.html";
-          } else {
-            localStorage.setItem("loginAttempts", attempts + 1);
-            localStorage.setItem("lastAttempt", now);
-
-            alert("Invalid email or password. Please try again.");
-          }
-        });
-      });
-    </script>
-
-    <!-- for closing the modal -->
-    <script>
-      var modal = document.getElementById("modal");
-
-      var adminLink = document.getElementById("admin-link");
-
-      var closeBtn = document.getElementsByClassName("close")[0];
-
-      adminLink.onclick = function () {
-        modal.style.display = "block";
-      };
-
-      closeBtn.onclick = function () {
-        modal.style.display = "none";
-      };
-
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      };
-    </script>
+  
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
