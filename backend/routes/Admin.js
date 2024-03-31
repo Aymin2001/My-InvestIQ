@@ -13,50 +13,50 @@ const JWT_SECRETE = 'Ayminisagoodgir@l';
 //Create a User using: POST "api/auth". No login required. 
 //Now Creating"api/auth/createuser" instead of router.post( '/'.
 router.post('/createuser', [
-    body('name', 'Enter a valid name').isLength({ min: 3 }),
-    body('email', 'Enter a valid email').isEmail(),
-    body('password').isLength({ min: 5 }),
-    body('dateOfBirth'), // Assuming dateOfBirth is in ISO 8601 format
-    body('city').isString(),
-    body('phone'), // Assuming phone number validation according to locale
+  body('name', 'Enter a valid name').isLength({ min: 3 }),
+  body('email', 'Enter a valid email').isEmail(),
+  body('password').isLength({ min: 5 }),
+  body('dateOfBirth'), // Assuming dateOfBirth is in ISO 8601 format
+  body('city').isString(),
+  body('phone'), // Assuming phone number validation according to locale
 ], async (req, res) => {
-    let success = false;
+  try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ success: false, errors: errors.array() });
+      }
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ success, errors: errors.array() });
-    }
+      // Check if the user already exists
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
+          return res.status(400).json({ success: false, error: "User with this email already exists" });
+      }
 
-    try {
-        let user = await User.findOne({ email: req.body.email });
-        if (user) {
-            return res.status(400).json({ success, error: "User with this Email already exists" });
-        }
+      // Hash the password
+      const salt = await bcrypt.genSalt(10);
+      const securePassword = await bcrypt.hash(req.body.password, salt);
 
-        const salt = await bcrypt.genSalt(10);
-        const securePassword = await bcrypt.hash(req.body.password, salt);
-        user = await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: securePassword,
-            dateOfBirth: req.body.dateOfBirth,
-            city: req.body.city,
-            phone: req.body.phone
-        });
+      // Create the user
+      user = await User.create({
+          name: req.body.name,
+          email: req.body.email,
+          password: securePassword,
+          dateOfBirth: req.body.dateOfBirth,
+          city: req.body.city,
+          phone: req.body.phone
+      });
 
-        const data = {
-            user: {
-                id: user.id
-            }
-        }
-        const authToken = jwt.sign(data, JWT_SECRET);
-        success = true;
-        res.json({ success, authToken });
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Internal Server Error");
-    }
+      // Generate JWT token
+      const authToken = jwt.sign({ user: { id: user.id } }, JWT_SECRET);
+
+      // Return success response with token
+      res.json({ success: true, authToken });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal Server Error");
+  }
 });
+
 
 
 
