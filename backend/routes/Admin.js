@@ -20,7 +20,7 @@ router.post('/createuser', [
   body('city').isString(),
   body('phone'), // Assuming phone number validation according to locale
 ], async (req, res) => {
-  try {
+  
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
           return res.status(400).json({ success: false, errors: errors.array() });
@@ -51,10 +51,7 @@ router.post('/createuser', [
 
       // Return success response with token
       res.json({ success: true, authToken });
-  } catch (error) {
-      console.error(error.message);
-      res.status(500).send("Internal Server Error");
-  }
+ 
 });
 
 
