@@ -142,4 +142,52 @@ router.post('/getuser', getuser, async (req, res) => {
     }
   });
   
+  // Route to change user password
+router.post('/change-password', [
+    auth, // Authenticate user
+    body('currentPassword', 'Current password is required').notEmpty(),
+    body('newPassword', 'New password is required').notEmpty(),
+    body('confirmPassword', 'Confirm password is required').notEmpty(),
+    body('newPassword')
+      .isLength({ min: 5 }).withMessage('New password must be at least 5 characters long')
+      .custom((value, { req }) => {
+        if (value !== req.body.confirmPassword) {
+          throw new Error('New password and confirm password must match');
+        }
+        return true;
+      }),
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    try {
+      const userId = req.user.id;
+      const { currentPassword, newPassword } = req.body;
+  
+      // Find user by ID
+      const user = await User.findById(userId);
+  
+      // Check if current password matches
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid current password' });
+      }
+  
+      // Hash new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      // Update user's password
+      user.password = hashedPassword;
+      await user.save();
+  
+      res.json({ message: 'Password changed successfully' });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
 module.exports = router;
