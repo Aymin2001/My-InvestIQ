@@ -141,7 +141,7 @@
               Rese<span class="text-purple">t</span
               ><span class="text-cyan">Password</span>
             </h3>
-            <div id="alert-container"></div>
+            <div id="alerts-container"></div>
 
             <form id="Reset-form">
               <div class="input-group">
@@ -302,7 +302,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- full msg display on modal -->
     <div
       class="modal fade"
@@ -609,7 +609,7 @@
         });
     </script>
 
-    <!-- get dat and show in prifile section of admin -->
+    <!-- get data and show in prifile section of admin -->
     <script>
       window.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("id");
@@ -619,7 +619,7 @@
 
           return;
         }
-        
+
         try {
           const response = await fetch(
             `https://my-invest-iq-backend.vercel.app/api/auth/getregisterdetail/${userId}`
@@ -701,10 +701,9 @@
 
           if (!userId) {
             console.error("User ID not found in local storage");
-
             return;
           }
-          
+
           try {
             const response = await fetch(
               `https://my-invest-iq-backend.vercel.app/api/auth/reset-password/${userId}`,
@@ -728,20 +727,37 @@
             }
 
             // Show success message
-            const successAlert = createAlert(
+            const successAlert = document.createElement("div");
+            successAlert.classList.add(
+              "alert",
               "alert-success",
-              responseData.message
+              "alert-dismissible",
+              "fade",
+              "show"
             );
-            alertContainer.appendChild(successAlert);
+            successAlert.setAttribute("role", "alert");
+            successAlert.innerHTML = `<strong>Password</strong> reset successfully
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+            document
+              .getElementById("alerts-container")
+              .appendChild(successAlert);
 
             // Clear form fields
             document.getElementById("Reset-form").reset();
           } catch (error) {
             console.error("Error resetting password:", error);
-
             // Show error message
-            const errorAlert = createAlert("alert-danger", error.message);
-            alertContainer.appendChild(errorAlert);
+            const errorAlert = document.createElement("div");
+            errorAlert.classList.add(
+              "alert",
+              "alert-danger",
+              "alert-dismissible",
+              "fade",
+              "show"
+            );
+            errorAlert.setAttribute("role", "alert");
+            errorAlert.innerText = error.message;
+            document.getElementById("alerts-container").appendChild(errorAlert);
           }
         });
 
