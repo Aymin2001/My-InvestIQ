@@ -40,13 +40,14 @@
       <h3 id="glitterText" class="gradient-text display-5 mb-3 text-center">
         LOG<span class="text-purple">I</span><span class="text-cyan">N</span>
       </h3>
+      <div id="alerts-container"></div>
       <form id="login-form">
         <div class="input-group">
           <input
             type="email"
             name="email"
             placeholder="Email"
-            id="admin-email"
+            id="login-email"
             required
           />
         </div>
@@ -55,7 +56,7 @@
             type="password"
             name="password"
             placeholder="Password"
-            id="admin-pswrd"
+            id="login-pswrd"
             required
           />
         </div>
@@ -69,44 +70,10 @@
     <script>
       var closeBtn = document.querySelector(".close");
       closeBtn.addEventListener("click", function () {
-        history.back();
+        window.location.href = "index.html";
       });
     </script>
 
-    <!-- for navigating to administrator page -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var loginForm = document.getElementById("login-form");
-
-        loginForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          var attempts = parseInt(localStorage.getItem("loginAttempts")) || 0;
-          var lastAttempt = parseInt(localStorage.getItem("lastAttempt")) || 0;
-          var now = Date.now();
-          var oneMinute = 60 * 1000;
-
-          if (attempts >= 3 && now - lastAttempt < oneMinute) {
-            alert(
-              "You have exceeded the maximum number of attempts. Please try again after one minute."
-            );
-            return;
-          }
-
-          var email = document.getElementById("admin-email").value.trim();
-          var password = document.getElementById("admin-pswrd").value.trim();
-
-          if (email === "admin@gmail.com" && password === "admin890") {
-            window.location.href = "administrator.html";
-          } else {
-            localStorage.setItem("loginAttempts", attempts + 1);
-            localStorage.setItem("lastAttempt", now);
-
-            alert("Invalid email or password. Please try again.");
-          }
-        });
-      });
-    </script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -118,5 +85,76 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <!-- admin login -->
+    <script>
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("login-email").value;
+          const password = document.getElementById("login-pswrd").value;
+
+          try {
+            const formData = {
+              email: email,
+              password: password,
+            };
+
+            const response = await fetch(
+              "http://192.168.0.109:3000/api/auth/login",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              }
+            );
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+              throw new Error("Failed to login: " + responseData.error);
+            }
+            // Show success message
+            const successAlert = document.createElement("div");
+            successAlert.classList.add(
+              "alert",
+              "alert-success",
+              "alert-dismissible",
+              "fade",
+              "show"
+            );
+            successAlert.setAttribute("role", "alert");
+            successAlert.innerHTML = `<strong>Admin</strong> registered successfully
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+            document
+              .getElementById("alerts-container")
+              .appendChild(successAlert);
+
+            localStorage.setItem("authToken", responseData.authToken);
+            localStorage.setItem("id", responseData.id);
+
+            window.location.href = "administrator.html";
+          } catch (error) {
+            console.error("Error logging in:", error);
+            // Show error message
+            const errorAlert = document.createElement("div");
+            errorAlert.classList.add(
+              "alert",
+              "alert-danger",
+              "alert-dismissible",
+              "fade",
+              "show"
+            );
+            errorAlert.setAttribute("role", "alert");
+            errorAlert.innerText = error.message;
+            document.getElementById("alerts-container").appendChild(errorAlert);
+          }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -11,6 +11,7 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- Favicon -->
 
@@ -83,12 +84,17 @@
             <i class="fas fa-user"></i>
             <p>Register Admin</p>
           </div>
+          <div class="rows" data-tab="logout" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <p>Logout</p>
+          </div>
         </div>
       </div>
 
       <div class="content">
         <div class="tab-content active" id="dashboard-content">
           <!-- for service -->
+          <div id="alert-container"></div>
           <table id="serviceTable">
             <caption>
               Services Detail
@@ -100,6 +106,7 @@
                 <th scope="col">Mobile No</th>
                 <th scope="col">Subject</th>
                 <th scope="col">Message</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -134,31 +141,33 @@
               Rese<span class="text-purple">t</span
               ><span class="text-cyan">Password</span>
             </h3>
-            <form id="login-form">
+            <div id="alert-container"></div>
+
+            <form id="Reset-form">
               <div class="input-group">
                 <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  id="admin-email"
+                  type="password"
+                  name="currentPassword"
+                  placeholder="Current Password"
+                  id="current-password"
                   required
                 />
               </div>
               <div class="input-group">
                 <input
                   type="password"
-                  name="password"
-                  placeholder="Password"
-                  id="admin-pswrd"
+                  name="newPassword"
+                  placeholder="New Password"
+                  id="new-password"
                   required
                 />
               </div>
               <div class="input-group">
                 <input
                   type="password"
-                  name="reset-password"
-                  placeholder="Password"
-                  id="admin-resetpswrd"
+                  name="confirmNewPassword"
+                  placeholder="Confirm Password"
+                  id="confirm-password"
                   required
                 />
               </div>
@@ -173,24 +182,24 @@
             <div class="profile-content">
               <img src="./img/profileimg.jpg" width="200px" height="200px" />
               <div class="profile-info">
-                <span>ADMIN</span>
-                <p>Joined on 12 Jan</p>
+                <span id="admi-name">ADMIN</span>
+                <p id="admi-joined-on">Joined on 12 Jan</p>
                 <div class="info-icons">
                   <div class="info-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>City</span>
+                    <span id="admi-city">City</span>
                   </div>
                   <div class="info-item">
                     <i class="fas fa-phone"></i>
-                    <span>Phone No</span>
+                    <span id="admi-phone">Phone No</span>
                   </div>
                   <div class="info-item">
                     <i class="fas fa-envelope"></i>
-                    <span>Email</span>
+                    <span id="admi-email">Email</span>
                   </div>
                   <div class="info-item">
                     <i class="fas fa-calendar-alt"></i>
-                    <span>Date of Birth</span>
+                    <span id="admi-dob">Date of Birth</span>
                   </div>
                 </div>
               </div>
@@ -218,13 +227,15 @@
               Regis<span class="text-purple">t</span
               ><span class="text-cyan">er Admin</span>
             </h3>
-            <form id="login-form">
+            <div id="alerts-container"></div>
+
+            <form id="register-form">
               <div class="input-group">
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
-                  id="admin-email"
+                  id="rgstr-email"
                   required
                 />
               </div>
@@ -233,7 +244,7 @@
                   type="password"
                   name="password"
                   placeholder="Password"
-                  id="admin-pswrd"
+                  id="rgstr-pswrd"
                   required
                 />
               </div>
@@ -242,7 +253,7 @@
                   type="text"
                   name="name"
                   placeholder="Name"
-                  id="admin-name"
+                  id="rgstr-name"
                   required
                 />
               </div>
@@ -251,7 +262,7 @@
                   type="date"
                   name="dob"
                   placeholder="Date of Birth"
-                  id="admin-dob"
+                  id="rgstr-dob"
                   required
                 />
               </div>
@@ -260,7 +271,7 @@
                   type="text"
                   name="city"
                   placeholder="City"
-                  id="admin-city"
+                  id="rgstr-city"
                   required
                 />
               </div>
@@ -269,21 +280,53 @@
                   type="tel"
                   name="phone"
                   placeholder="Phone Number"
-                  id="admin-phone"
+                  id="rgstr-phone"
                   required
                 />
               </div>
-              <div class="input-group">
-                <input type="file" name="profile-picture" id="admin-profile-picture" accept="image/*" required />
-            </div>
               <div class="input-group">
                 <button type="submit" class="submit-button">Submit</button>
               </div>
             </form>
           </div>
         </div>
+        <div class="tab-content" id="logout-content">
+          <div id="logout-dialog" class="logout-dialog">
+            <div class="logout-dialog-content">
+              <span class="close" id="cancelLogout">&times;</span>
+              <p>Are you sure you want to logout?</p>
+              <button id="confirmLogout">Yes</button>
+              <button id="cancelLogoutBtn">No</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+ 
+    <!-- full msg display on modal -->
+    <div
+      class="modal fade"
+      id="messageModal"
+      tabindex="-1"
+      aria-labelledby="messageModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messageModalLabel">Full Message</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="fullMessage"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- toggle sidebar -->
     <script>
       function toggleSidebar() {
@@ -302,21 +345,29 @@
 
           data.forEach((service) => {
             const row = document.createElement("tr");
+            const shortMessage = truncateMessage(service.message, 3);
             row.innerHTML = `
-                      <td scope="row" data-label="NAME">${service.name}</td>
-                      <td scope="row" data-label="EMAIL">${service.email}</td>
-                      <td scope="row" data-label="PHONE-NO">${service.mobileNo}</td>
-                      <td scope="row" data-label="SUBJECT">${service.subject}</td>
-                      <td scope="row" data-label="MESSAGE">${service.message}</td>
-                      <td>
-                          <button class="btn-delete" data-service-id="${service._id}">Delete</button>
-                      </td>
-                  `;
+        <td scope="row" data-label="Name">${service.name}</td>
+        <td scope="row" data-label="Email">${service.email}</td>
+        <td scope="row" data-label="Mobile No">${service.mobileNo}</td>
+        <td scope="row" data-label="Subject">${service.subject}</td>
+        <td scope="row" data-label="Message" title="${service.message}">${shortMessage}</td>
+        <td>
+          <button class="btn btn-primary btn-view" data-message="${service.message}" data-bs-toggle="modal" data-bs-target="#messageModal">View</button>
+          <button class="btn btn-danger btn-delete" data-service-id="${service._id}">Delete</button>
+        </td>
+      `;
             tableBody.appendChild(row);
           });
 
-          const deleteButtons = document.querySelectorAll(".btn-delete");
-          deleteButtons.forEach((button) => {
+          document.querySelectorAll(".btn-view").forEach((button) => {
+            button.addEventListener("click", () => {
+              const fullMessage = button.getAttribute("data-message");
+              document.getElementById("fullMessage").textContent = fullMessage;
+            });
+          });
+
+          document.querySelectorAll(".btn-delete").forEach((button) => {
             button.addEventListener("click", () => {
               const serviceId = button.getAttribute("data-service-id");
               if (serviceId) {
@@ -350,6 +401,14 @@
           })
           .catch((error) => console.error("Error deleting service:", error));
       }
+
+      function truncateMessage(message, wordsCount) {
+        const words = message.split(" ");
+        if (words.length > wordsCount) {
+          return words.slice(0, wordsCount).join(" ") + "...";
+        }
+        return message;
+      }
     </script>
 
     <!-- for fetching and deleting contact detail -->
@@ -361,20 +420,28 @@
 
           data.forEach((contact) => {
             const row = document.createElement("tr");
+            const shortMessage = truncateMessage(contact.message, 3);
             row.innerHTML = `
-                        <td scope="row" data-label="NAME">${contact.name}</td>
-                        <td scope="row" data-label="EMAIL">${contact.email}</td>
-                        <td scope="row" data-label="SUBJECT">${contact.subject}</td>
-                        <td scope="row" data-label="MESSAGE">${contact.message}</td>
-                        <td>
-                            <button class="btn-delete" data-contact-id="${contact._id}">Delete</button>
-                        </td>
-                    `;
+        <td scope="row" data-label="Name">${contact.name}</td>
+        <td scope="row" data-label="Email">${contact.email}</td>
+        <td scope="row" data-label="Subject">${contact.subject}</td>
+        <td scope="row" data-label="Message" title="${contact.message}">${shortMessage}</td>
+        <td>
+          <button class="btn btn-primary btn-view" data-message="${contact.message}" data-bs-toggle="modal" data-bs-target="#messageModal">View</button>
+          <button class="btn btn-danger btn-delete" data-contact-id="${contact._id}">Delete</button>
+        </td>
+      `;
             tableBody.appendChild(row);
           });
 
-          const deleteButtons = document.querySelectorAll(".btn-delete");
-          deleteButtons.forEach((button) => {
+          document.querySelectorAll(".btn-view").forEach((button) => {
+            button.addEventListener("click", () => {
+              const fullMessage = button.getAttribute("data-message");
+              document.getElementById("fullMessage").textContent = fullMessage;
+            });
+          });
+
+          document.querySelectorAll(".btn-delete").forEach((button) => {
             button.addEventListener("click", () => {
               const contactId = button.getAttribute("data-contact-id");
               deleteContact(contactId);
@@ -385,9 +452,10 @@
           console.error("Error fetching contact details:", error)
         );
 
+      // Function to delete contact
       function deleteContact(contactId) {
         fetch(
-          ` https://my-invest-iq-backend.vercel.app/api/contact/Contact/${contactId}`,
+          `https://my-invest-iq-backend.vercel.app/api/contact/Contact/${contactId}`,
           {
             method: "DELETE",
           }
@@ -403,6 +471,15 @@
             }
           })
           .catch((error) => console.error("Error deleting contact:", error));
+      }
+
+      // Function to truncate message to first three words
+      function truncateMessage(message, wordsCount) {
+        const words = message.split(" ");
+        if (words.length > wordsCount) {
+          return words.slice(0, wordsCount).join(" ") + "...";
+        }
+        return message;
       }
     </script>
     <!-- active tab bar colour -->
@@ -451,5 +528,243 @@
         dropdownContent.classList.toggle("show-dropdown");
       }
     </script>
+
+    <!-- register new admin -->
+    <script>
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("rgstr-email").value;
+          const password = document.getElementById("rgstr-pswrd").value;
+          const name = document.getElementById("rgstr-name").value;
+          const dob = document.getElementById("rgstr-dob").value;
+          const city = document.getElementById("rgstr-city").value;
+          const phone = document.getElementById("rgstr-phone").value;
+
+          try {
+            const formData = {
+              email: email,
+              password: password,
+              name: name,
+              dob: dob,
+              city: city,
+              phoneNo: phone,
+            };
+
+            const response = await fetch(
+              "http://192.168.0.109:3000/api/auth/register",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              }
+            );
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+              throw new Error(
+                "Failed to register admin: " + responseData.error
+              );
+            }
+
+            // Show success message
+            const successAlert = document.createElement("div");
+            successAlert.classList.add(
+              "alert",
+              "alert-success",
+              "alert-dismissible",
+              "fade",
+              "show"
+            );
+            successAlert.setAttribute("role", "alert");
+            successAlert.innerHTML = `<strong>Admin</strong> registered successfully
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+            document
+              .getElementById("alerts-container")
+              .appendChild(successAlert);
+
+            // Clear form fields
+            document.getElementById("register-form").reset();
+          } catch (error) {
+            console.error("Error registering admin:", error);
+
+            // Show error message
+            const errorAlert = document.createElement("div");
+            errorAlert.classList.add(
+              "alert",
+              "alert-danger",
+              "alert-dismissible",
+              "fade",
+              "show"
+            );
+            errorAlert.setAttribute("role", "alert");
+            errorAlert.innerText = error.message;
+            document.getElementById("alerts-container").appendChild(errorAlert);
+          }
+        });
+    </script>
+
+    <!-- get dat and show in prifile section of admin -->
+    <script>
+      window.addEventListener("DOMContentLoaded", async function () {
+        const userId = localStorage.getItem("id");
+
+        if (!userId) {
+          console.error("User ID not found in local storage");
+
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `http://192.168.0.109:3000/api/auth/getregisterdetail/${userId}`
+          );
+          const responseData = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              "Failed to fetch user details: " + responseData.error
+            );
+          }
+
+          const user = responseData.user;
+          const dobDate = user.dob.split("T")[0];
+
+          document.getElementById("admi-name").textContent = user.name;
+          document.getElementById(
+            "admi-joined-on"
+          ).textContent = `Joined on ${user.date}`; // Assuming 'createdAt' field exists
+          document.getElementById("admi-city").textContent = user.city;
+          document.getElementById("admi-phone").textContent = user.phoneNo;
+          document.getElementById("admi-email").textContent = user.email;
+          document.getElementById("admi-dob").textContent = dobDate;
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+        }
+      });
+    </script>
+
+    <!-- logout -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", function () {
+            document.getElementById("logout-dialog").style.display = "block";
+          });
+
+        document
+          .getElementById("cancelLogoutBtn")
+          .addEventListener("click", function () {
+            document.getElementById("logout-dialog").style.display = "none";
+          });
+
+        document
+          .getElementById("confirmLogout")
+          .addEventListener("click", function () {
+            localStorage.removeItem("authToken");
+
+            window.location.href = "adminlogin.html";
+          });
+
+        // Hide logout dialog when close button is clicked
+        document
+          .getElementById("cancelLogout")
+          .addEventListener("click", function () {
+            document.getElementById("logout-dialog").style.display = "none";
+          });
+      });
+    </script>
+
+    <!-- reset passwword -->
+    <script>
+      document
+        .getElementById("Reset-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const alertContainer = document.getElementById("alert-container");
+          alertContainer.innerHTML = "";
+
+          const currentPassword =
+            document.getElementById("current-password").value;
+          const newPassword = document.getElementById("new-password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          const userId = localStorage.getItem("id");
+
+          if (!userId) {
+            console.error("User ID not found in local storage");
+
+            return;
+          }
+
+          try {
+            const response = await fetch(
+              `http://192.168.0.109:3000/api/auth/reset-password/${userId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  currentPassword: currentPassword,
+                  newPassword: newPassword,
+                  confirmNewPassword: confirmPassword,
+                }),
+              }
+            );
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+              throw new Error(responseData.error || "Failed to reset password");
+            }
+
+            // Show success message
+            const successAlert = createAlert(
+              "alert-success",
+              responseData.message
+            );
+            alertContainer.appendChild(successAlert);
+
+            // Clear form fields
+            document.getElementById("Reset-form").reset();
+          } catch (error) {
+            console.error("Error resetting password:", error);
+
+            // Show error message
+            const errorAlert = createAlert("alert-danger", error.message);
+            alertContainer.appendChild(errorAlert);
+          }
+        });
+
+      function createAlert(type, message) {
+        const alertDiv = document.createElement("div");
+        alertDiv.classList.add("alert", type, "mt-3");
+
+        const closeButton = document.createElement("button");
+        closeButton.setAttribute("type", "button");
+        closeButton.classList.add("btn-close");
+        closeButton.setAttribute("data-bs-dismiss", "alert");
+        closeButton.setAttribute("aria-label", "Close");
+        alertDiv.appendChild(closeButton);
+
+        const messageText = document.createTextNode(message);
+        alertDiv.appendChild(messageText);
+
+        return alertDiv;
+      }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Include jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </body>
 </html>

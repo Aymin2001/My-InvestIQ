@@ -735,6 +735,8 @@
                 </p>
                 <h1 class="display-5 mb-5">Request A Service</h1>
               </div>
+              <div id="alert-container"></div>
+
               <div class="row g-3">
                 <div class="col-sm-6">
                   <div class="form-floating">
@@ -1134,76 +1136,90 @@
 
     <!-- connectivity with backened -->
     <script>
-      document
-        .getElementById("submitButton")
-        .addEventListener("click", async function (event) {
-          event.preventDefault();
-
-          const name = document.getElementById("name").value.trim();
-          const email = document.getElementById("email").value.trim();
-          const mobile = document.getElementById("mobile").value.trim();
-          const subject = document.getElementById("subject").value.trim();
-          const message = document.getElementById("message").value.trim();
-
-          if (!name || !email || !mobile || !subject || !message) {
-            let errorMessage = "Please fill out all required fields:";
-            if (!name) errorMessage += "\n- Your Name";
-            if (!email) errorMessage += "\n- Your Email";
-            if (!mobile) errorMessage += "\n- Your Mobile";
-            if (!subject) errorMessage += "\n- Subject";
-            if (!message) errorMessage += "\n- Message";
-            alert(errorMessage);
-            return;
+      document.getElementById("submitButton").addEventListener("click", async function (event) {
+        event.preventDefault();
+    
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+    
+        if (!name || !email || !mobile || !subject || !message) {
+          let errorMessage = "Please fill out all required fields:";
+          if (!name) errorMessage += "\n- Your Name";
+          if (!email) errorMessage += "\n- Your Email";
+          if (!mobile) errorMessage += "\n- Your Mobile";
+          if (!subject) errorMessage += "\n- Subject";
+          if (!message) errorMessage += "\n- Message";
+          displayError(errorMessage);
+          return;
+        }
+    
+        const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+        if (!emailPattern.test(email)) {
+          displayError("Please enter a valid email address");
+          return;
+        }
+    
+        if (mobile.length !== 11) {
+          displayError("Mobile number must be 11 digits");
+          return;
+        }
+    
+        try {
+          const formData = {
+            name: name,
+            email: email,
+            mobileNo: mobile,
+            subject: subject,
+            message: message,
+          };
+    
+          const response = await fetch("https://my-invest-iq-backend.vercel.app/api/service/Service", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (!response.ok) {
+            throw new Error("Failed to submit message");
           }
-
-          const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-          if (!emailPattern.test(email)) {
-            alert("Please enter a valid email address");
-            return;
-          }
-
-          if (mobile.length !== 11) {
-            alert("Mobile number must be 11 digits");
-            return;
-          }
-
-          try {
-            const formData = {
-              name: name,
-              email: email,
-              mobileNo: mobile,
-              subject: subject,
-              message: message,
-            };
-
-            const response = await fetch(
-              "https://my-invest-iq-backend.vercel.app/api/service/Service",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-              }
-            );
-
-            if (!response.ok) {
-              throw new Error("Failed to submit message");
-            }
-
-            document.getElementById("name").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("mobile").value = "";
-            document.getElementById("subject").value = "";
-            document.getElementById("message").value = "";
-
-            alert("Your message has been successfully submitted.");
-          } catch (error) {
-            console.error("Error submitting message:", error);
-            alert("Failed to submit message. ");
-          }
-        });
+    
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("mobile").value = "";
+          document.getElementById("subject").value = "";
+          document.getElementById("message").value = "";
+    
+          displaySuccess("Your message has been successfully submitted.");
+        } catch (error) {
+          console.error("Error submitting message:", error);
+          displayError("Failed to submit message.");
+        }
+      });
+    
+      function displaySuccess(message) {
+        const alertContainer = document.getElementById("alert-container");
+        alertContainer.innerHTML = `
+          <div class="alert alert-success" role="alert">
+            ${message}
+          </div>
+        `;
+      }
+    
+      function displayError(message) {
+        const alertContainer = document.getElementById("alert-container");
+        alertContainer.innerHTML = `
+          <div class="alert alert-danger" role="alert">
+            ${message}
+          </div>
+        `;
+      }
     </script>
+    
     <!-- for close icon -->
     <script>
       function handleReadMoreClick(link, contentId) {

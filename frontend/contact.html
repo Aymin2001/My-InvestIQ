@@ -141,6 +141,8 @@
                 it.
               </p>
             </div>
+            <div id="alert-container"></div>
+
             <form id="contactForm">
               <div class="form-floating mb-3">
                 <input
@@ -309,49 +311,62 @@
     ></a>
     <!-- conectivity with backened -->
     <script>
-      document
-        .getElementById("contactForm")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
-
-          const name = document.getElementById("name").value;
-          const email = document.getElementById("email").value;
-          const subject = document.getElementById("subject").value;
-          const message = document.getElementById("message").value;
-
-          try {
-            const formData = {
-              name: name,
-              email: email,
-
-              subject: subject,
-              message: message,
-            };
-
-            const response = await fetch(
-              "https://my-invest-iq-backend.vercel.app/api/contact/Contact",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-              }
-            );
-
-            if (!response.ok) {
-              throw new Error("Failed to send message");
-            }
-
-            document.getElementById("contactForm").reset();
-
-            alert("Message sent successfully!");
-          } catch (error) {
-            console.error("Error sending message:", error);
-            alert("Failed to send message. Please try again later.");
+      document.getElementById("contactForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+    
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const subject = document.getElementById("subject").value;
+        const message = document.getElementById("message").value;
+    
+        try {
+          const formData = {
+            name: name,
+            email: email,
+            subject: subject,
+            message: message,
+          };
+    
+          const response = await fetch("https://my-invest-iq-backend.vercel.app/api/contact/Contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (!response.ok) {
+            throw new Error("Failed to send message");
           }
-        });
+    
+          document.getElementById("contactForm").reset();
+    
+          displaySuccess("Message sent successfully!");
+        } catch (error) {
+          console.error("Error sending message:", error);
+          displayError("Failed to send message. Please try again later.");
+        }
+      });
+    
+      function displaySuccess(message) {
+        const alertContainer = document.getElementById("alert-container");
+        alertContainer.innerHTML = `
+          <div class="alert alert-success" role="alert">
+            ${message}
+          </div>
+        `;
+      }
+    
+      function displayError(message) {
+        const alertContainer = document.getElementById("alert-container");
+        alertContainer.innerHTML = `
+          <div class="alert alert-danger" role="alert">
+            ${message}
+          </div>
+        `;
+      }
     </script>
+    
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
