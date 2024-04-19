@@ -11,15 +11,16 @@ const JWT_SECRETE = "ayminisagoodgir@l";
 const get_auth = require("../middleware/get_auth");
 
 const multer = require("multer");
-// const storage = multer.diskStorage({});
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/') // Define the directory where files will be stored
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
+const storage = multer.diskStorage({});
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, 'uploads/') 
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.fieldname + '-' + Date.now())
+//     }
+// });
 
 const cloudinary = require("cloudinary").v2;
 
