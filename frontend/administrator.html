@@ -180,7 +180,13 @@
         <div class="tab-content" id="profile-content">
           <div class="profile-container">
             <div class="profile-content">
-              <img src="./img/profileimg.jpg" width="200px" height="200px" />
+              <img
+                src="./img/profileimg.jpg"
+                id="profile"
+                class="upload-profile"
+                width="200px"
+                height="200px"
+              />
               <div class="profile-info">
                 <span id="admi-name">ADMIN</span>
                 <p id="admi-joined-on">Joined on 12 Jan</p>
@@ -205,13 +211,13 @@
               </div>
             </div>
 
-            <div class="dropdown" onclick="toggleDropdown()">
+            <!-- <div class="dropdown" onclick="toggleDropdown()">
               <i class="fas fa-ellipsis-h dot-icon dropdown-dot"></i>
               <div class="dropdown-content" id="dropdownContent">
                 <a href="#"><i class="fas fa-cog"></i> Settings</a>
                 <a href="#"><i class="fas fa-user-plus"></i> Register</a>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="tab-content" id="register-content">
@@ -227,7 +233,7 @@
               Regis<span class="text-purple">t</span
               ><span class="text-cyan">er Admin</span>
             </h3>
-            <div id="alerts-container"></div>
+            <div id="register-alert"></div>
 
             <form id="register-form">
               <div class="input-group">
@@ -283,6 +289,9 @@
                   id="rgstr-phone"
                   required
                 />
+              </div>
+              <div class="input-group">
+                <input type="file" name="file" id="rgstr-file" required />
               </div>
               <div class="input-group">
                 <button type="submit" class="submit-button">Submit</button>
@@ -482,25 +491,7 @@
         return message;
       }
     </script>
-    <!-- active tab bar colour -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const tabLinks = document.querySelectorAll(".rows");
-        const tabContents = document.querySelectorAll(".tab-content");
-
-        tabLinks.forEach(function (link) {
-          link.addEventListener("click", function () {
-            const tabId = this.dataset.tab;
-
-            tabContents.forEach(function (content) {
-              content.classList.remove("active");
-            });
-
-            document.getElementById(tabId).classList.add("active");
-          });
-        });
-      });
-    </script>
+   
     <!-- shows content on right side based on selected tab -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -542,25 +533,23 @@
           const dob = document.getElementById("rgstr-dob").value;
           const city = document.getElementById("rgstr-city").value;
           const phone = document.getElementById("rgstr-phone").value;
+          const fileInput = document.getElementById("rgstr-file"); 
 
           try {
-            const formData = {
-              email: email,
-              password: password,
-              name: name,
-              dob: dob,
-              city: city,
-              phoneNo: phone,
-            };
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("name", name);
+            formData.append("dob", dob);
+            formData.append("city", city);
+            formData.append("phoneNo", phone);
+            formData.append("profile", fileInput.files[0]); 
 
             const response = await fetch(
-              "https://my-invest-iq-backend.vercel.app/api/auth/register",
+              "http://192.168.0.109:3000/api/auth/register",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
+                body: formData,
               }
             );
 
@@ -568,32 +557,38 @@
 
             if (!response.ok) {
               throw new Error(
-                "Failed to register admin: " + responseData.error
+                "Failed to upload profile image: " + responseData.error
               );
             }
 
-            // Show success message
-            const successAlert = document.createElement("div");
-            successAlert.classList.add(
-              "alert",
-              "alert-success",
-              "alert-dismissible",
-              "fade",
-              "show"
-            );
-            successAlert.setAttribute("role", "alert");
-            successAlert.innerHTML = `<strong>Admin</strong> registered successfully
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-            document
-              .getElementById("alerts-container")
-              .appendChild(successAlert);
+            if (response.status === 201) {
+            
+              const successAlert = document.createElement("div");
+              successAlert.classList.add(
+                "alert",
+                "alert-success",
+                "alert-dismissible",
+                "fade",
+                "show"
+              );
+              successAlert.setAttribute("role", "alert");
+              successAlert.innerHTML = `<strong>ADMIN REGISTERED</strong> successfully
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+              document
+                .getElementById("register-alert")
+                .appendChild(successAlert);
 
-            // Clear form fields
-            document.getElementById("register-form").reset();
+             
+              document.getElementById("register-form").reset();
+            } else {
+              throw new Error(
+                "Failed to upload profile image. Unexpected response from server."
+              );
+            }
           } catch (error) {
-            console.error("Error registering admin:", error);
+            console.error("Error uploading profile image:", error);
 
-            // Show error message
+        
             const errorAlert = document.createElement("div");
             errorAlert.classList.add(
               "alert",
@@ -603,8 +598,10 @@
               "show"
             );
             errorAlert.setAttribute("role", "alert");
-            errorAlert.innerText = error.message;
-            document.getElementById("alerts-container").appendChild(errorAlert);
+            errorAlert.innerHTML = `<strong>File size is too large. Please select a smaller file or unable to resize.</strong>
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+
+            document.getElementById("register-alert").appendChild(errorAlert);
           }
         });
     </script>
@@ -616,16 +613,15 @@
 
         if (!userId) {
           console.error("User ID not found in local storage");
-
           return;
         }
 
         try {
           const response = await fetch(
-            `https://my-invest-iq-backend.vercel.app/api/auth/getregisterdetail/${userId}`
+            `http://192.168.0.109:3000/api/auth/getregisterdetail/${userId}`
           );
           const responseData = await response.json();
-
+          console.log(responseData);
           if (!response.ok) {
             throw new Error(
               "Failed to fetch user details: " + responseData.error
@@ -638,11 +634,17 @@
           document.getElementById("admi-name").textContent = user.name;
           document.getElementById(
             "admi-joined-on"
-          ).textContent = `Joined on ${user.date}`; // Assuming 'createdAt' field exists
+          ).textContent = `Joined on ${user.date}`;
           document.getElementById("admi-city").textContent = user.city;
           document.getElementById("admi-phone").textContent = user.phoneNo;
           document.getElementById("admi-email").textContent = user.email;
           document.getElementById("admi-dob").textContent = dobDate;
+
+         
+          const profileImg = document.getElementById("profile");
+          profileImg.src = user.avatar;
+          profileImg.width = "200";
+          profileImg.height = "200";
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
@@ -726,7 +728,7 @@
               throw new Error(responseData.error || "Failed to reset password");
             }
 
-            // Show success message
+           
             const successAlert = document.createElement("div");
             successAlert.classList.add(
               "alert",
@@ -742,11 +744,11 @@
               .getElementById("alerts-container")
               .appendChild(successAlert);
 
-            // Clear form fields
+          
             document.getElementById("Reset-form").reset();
           } catch (error) {
             console.error("Error resetting password:", error);
-            // Show error message
+            
             const errorAlert = document.createElement("div");
             errorAlert.classList.add(
               "alert",

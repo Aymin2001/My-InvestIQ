@@ -21,10 +21,12 @@ app.get("/check",(req,res) =>{
     res.json('hello');
 })
 
-/
+
+
 app.use('/api/contact', require('./routes/Contact')); 
 app.use('/api/service', require('./routes/Services')); 
 app.use('/api/auth', require('./routes/Admin'));
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

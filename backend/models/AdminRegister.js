@@ -8,6 +8,7 @@ const userSchema = new Schema({
     dob: { type: Date, required: true },
     city: { type: String, required: true },
     phoneNo: { type: String, required: true },
+    avatar: { type: String},
     date: {
         type: Date,
         default: Date.now,

@@ -1060,7 +1060,7 @@ table th {
   margin-right: 20px;
 }
 /* Dropdown Content (Hidden by Default) */
-.dropdown-content {
+/* .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
@@ -1090,7 +1090,7 @@ table th {
 
 .dropdown-content a:hover {
   background-color: #f1f1f1;
-}
+} */
 .profile-info {
   display: flex;
   flex-direction: column;
@@ -1170,4 +1170,8 @@ table th {
 
 #cancelLogoutBtn {
   background-color: #6c757d; /* Change background color for No button */
+}
+.upload-profile{
+  border: 2px solid black;
+  border-radius: 50%;
 }

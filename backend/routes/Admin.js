@@ -5,36 +5,32 @@ const User = require('../models/AdminRegister');
 const jwt = require('jsonwebtoken');
 const JWT_SECRETE = "ayminisagoodgir@l";
 
-router.post('/register', [
 
-    body('email').isEmail().withMessage('Please provide a valid email address'),
-    body('password'),
-    body('name').notEmpty().withMessage('Name is required'),
-    body('dob'),
-    body('city').notEmpty().withMessage('City is required'),
-    body('phoneNo').isMobilePhone().withMessage('Please provide a valid phone number')
-], async (req, res) => {
-    try {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
 
-        const { email, password, name, dob, city, phoneNo } = req.body;
-        const existingAdmin = await User.findOne({ email });
-        if (existingAdmin) {
-            return res.status(400).json({ error: 'Email is already registered' });
-        }
+const get_auth = require("../middleware/get_auth");
 
-        const newAdmin = new User({ email, password, name, dob, city, phoneNo });
-        await newAdmin.save();
-        res.status(201).json({ message: 'Admin registered successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while registering admin' });
+const multer = require("multer");
+// const storage = multer.diskStorage({});
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/') // Define the directory where files will be stored
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now())
     }
 });
+
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+    cloud_name: "dxey9d09h",
+    api_key: "382931778361716",
+    api_secret: "RD1dpaSzYlGYuSpmlytbD-lCjs0",
+});
+
+
+
 
 
 
@@ -138,6 +134,51 @@ router.post('/reset-password/:userId', [
         res.status(500).json({ error: 'An error occurred while resetting password' });
     }
 });
+
+const fileFilter = (req, file, callback) => {
+    if (file.mimetype.startsWith("image")) {
+        callback(null, true);
+    } else {
+        callback("Invalid Image File!", false);
+    }
+};
+
+const uploads = multer({ storage, fileFilter });
+
+
+
+router.post("/register", uploads.single("profile"), async (req, res) => {
+    try {
+        const { email, password, name, dob, city, phoneNo } = req.body;
+
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            public_id: `${email}_profile`,
+            width: 500,
+            height: 500,
+            crop: "fill",
+        });
+        const newUser = new User({
+            email,
+            password,
+            name,
+            dob,
+            city,
+            phoneNo,
+            avatar: result.url,
+        });
+        await newUser.save();
+        res.status(201).json({ success: true, message: "User registered successfully", newUser });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
 
 
 module.exports = router;
