@@ -546,7 +546,7 @@
             formData.append("profile", fileInput.files[0]); 
 
             const response = await fetch(
-              "http://192.168.0.109:3000/api/auth/register",
+              "https://my-invest-iq-backend.vercel.app/api/auth/register",
               {
                 method: "POST",
                 body: formData,
@@ -618,7 +618,7 @@
 
         try {
           const response = await fetch(
-            `http://192.168.0.109:3000/api/auth/getregisterdetail/${userId}`
+            `https://my-invest-iq-backend.vercel.app/api/auth/getregisterdetail/${userId}`
           );
           const responseData = await response.json();
           console.log(responseData);
